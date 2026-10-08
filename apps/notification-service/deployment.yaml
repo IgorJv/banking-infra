@@ -23,8 +23,8 @@ spec:
             - containerPort: 3000
               name: http
           env:
-            - name: KAFKA_BROKER
-              value: "kafka-broker-service:9092"
+            - name: KAFKA_BROKERS
+              value: "kafka:9092"
           resources:
             limits:
               cpu: "500m"
