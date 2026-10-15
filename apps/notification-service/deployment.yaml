@@ -14,13 +14,17 @@ spec:
     metadata:
       labels:
         app: notification-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
     spec:
       containers:
         - name: notification-service
           image: jvdev/notification-service:latest
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 3000
+            - containerPort: 8080
               name: http
           env:
             - name: KAFKA_BROKERS
