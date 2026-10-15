@@ -22,7 +22,7 @@ spec:
       containers:
         - name: notification-service
           image: jvdev/notification-service:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
               name: http
