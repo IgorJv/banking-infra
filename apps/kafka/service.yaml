@@ -2,10 +2,22 @@ apiVersion: v1
 kind: Service
 metadata:
   name: kafka
+  labels:
+    app: kafka
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9308"
 spec:
+  clusterIP: None
+  selector:
+    app: kafka
   ports:
     - port: 9092
       targetPort: 9092
       name: plaintext
-  selector:
-    app: kafka
+    - port: 9093
+      targetPort: 9093
+      name: controller
+    - port: 9308
+      targetPort: 9308
+      name: metrics
