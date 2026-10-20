@@ -11,24 +11,6 @@ spec:
     requests:
       storage: 1Gi
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: kafka
-  labels:
-    app: kafka
-spec:
-  clusterIP: None
-  selector:
-    app: kafka
-  ports:
-    - port: 9092
-      targetPort: 9092
-      name: plaintext
-    - port: 9093
-      targetPort: 9093
-      name: controller
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -44,6 +26,10 @@ spec:
     metadata:
       labels:
         app: kafka
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9308"
+        prometheus.io/path: "/metrics"
     spec:
       containers:
         - name: kafka
@@ -83,6 +69,13 @@ spec:
           volumeMounts:
             - name: kafka-data
               mountPath: /var/lib/kafka/data
+        - name: kafka-exporter
+          image: danielqsj/kafka-exporter:v1.7.0
+          args:
+            - "--kafka.server=kafka:9092"
+          ports:
+            - containerPort: 9308
+              name: metrics
       volumes:
         - name: kafka-data
           persistentVolumeClaim:
